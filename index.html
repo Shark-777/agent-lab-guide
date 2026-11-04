@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Агенты">
+<meta name="theme-color" content="#0e7c86">
+<title>Агентная лаборатория</title>
+<!-- Офлайн-версия для iPhone: один файл, без сети и без JavaScript.
+     Открывается в Файлах (быстрый просмотр) и в Safari. Уроки — нативные <details>. -->
+<style>
+:root{--bg:#f3f6f7;--surface:#fff;--fg:#14232b;--muted:#56707c;--line:#d5e0e4;--accent:#0e7c86;--soft:#dff0f1;--warn:#a6561b;--ok:#2f7d3c;--code:#0f1d24;--codefg:#d8ecef;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--bg:#0c161b;--surface:#13222a;--fg:#e3eef1;--muted:#8fa9b3;--line:#24363f;--accent:#4cc3cc;--soft:#16343a;--warn:#e3a06a;--ok:#7cc98a;--code:#08110f;--codefg:#cfe7ea}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg)}
+body{font:17px/1.5 -apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif;-webkit-text-size-adjust:100%;
+ padding:max(20px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(32px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+.wrap{max-width:640px;margin:0 auto}
+.eyebrow{font:600 12px ui-monospace,Menlo,monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+h1{font:800 30px/1.1 -apple-system,system-ui,sans-serif;margin:8px 0 8px;letter-spacing:-.02em}
+.lead{color:var(--muted);margin:0 0 18px}
+details{background:var(--surface);border:1px solid var(--line);border-radius:14px;margin:10px 0;overflow:hidden}
+summary{list-style:none;cursor:pointer;padding:15px 16px;font-weight:650;display:flex;gap:12px;align-items:center;min-height:44px}
+summary::-webkit-details-marker{display:none}
+summary .n{flex:0 0 28px;height:28px;border-radius:50%;background:var(--soft);color:var(--accent);display:grid;place-items:center;font-size:14px;font-weight:700}
+summary .t{flex:1}
+summary::after{content:"›";color:var(--muted);font-size:22px;transition:transform .2s}
+details[open] summary::after{transform:rotate(90deg)}
+details[open] summary{border-bottom:1px solid var(--line)}
+.body{padding:4px 16px 16px}
+.body p,.body li{margin:10px 0}
+ul,ol{padding-left:22px}
+code{font:14px ui-monospace,Menlo,monospace;background:var(--soft);padding:1px 5px;border-radius:5px;word-break:break-word}
+pre{background:var(--code);color:var(--codefg);font:13.5px/1.5 ui-monospace,Menlo,monospace;padding:12px 14px;border-radius:10px;white-space:pre-wrap;word-break:break-word;margin:10px 0;-webkit-user-select:all;user-select:all}
+.card{border-left:3px solid var(--line);padding:2px 0 2px 12px;margin:12px 0}
+.card.bad{border-color:var(--warn)}.card.good{border-color:var(--ok)}
+.card b{display:block}
+.tag{display:inline-block;font:700 11px ui-monospace,monospace;text-transform:uppercase;letter-spacing:.05em;padding:3px 6px;border-radius:5px;margin-right:4px}
+.tag.f{background:var(--soft);color:var(--accent)}.tag.u{border:1px solid var(--warn);color:var(--warn)}
+.flow{display:grid;gap:6px;margin:12px 0}
+.flow div{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 12px}
+.flow .a{border:0;background:none;padding:0;text-align:center;color:var(--accent);font-weight:700}
+label.chk{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line)}
+label.chk input{width:22px;height:22px;margin-top:1px;accent-color:var(--accent);flex:0 0 auto}
+small,.muted{color:var(--muted)}
+.foot{margin-top:22px;font-size:14px;color:var(--muted)}
+</style>
+</head>
+<body><div class="wrap">
+
+<div class="eyebrow">agent-lab · метод Бориса Черного</div>
+<h1>Агентная лаборатория</h1>
+<p class="lead">Как ставить агентам задачи, чтобы они работали долго и сами проверяли себя. Нажми на урок, чтобы раскрыть.</p>
+
+<details open><summary><span class="n">1</span><span class="t">Главная мысль</span></summary><div class="body">
+<p>Модель уже умеет больше, чем мы ей позволяем. Хитрых приёмов нет. Дай задачу чуть сложнее посильной, дай способ <b>самой проверить результат</b>, посмотри, где она спотыкается, и только там добавь подсказку.</p>
+<div class="card"><b>Снять ограничения</b><small>Лишняя обвязка мешает. Сначала убрать, потом возвращать по строке.</small></div>
+<div class="card"><b>Цель, а не шаги</b><small>Задача + ограничения + критерий готовности.</small></div>
+<div class="card"><b>Проверка решает всё</b><small>Без неё агент не знает, когда остановиться.</small></div>
+<div class="card"><b>Эмпирика</b><small>Пробуй, смотри, исправляй. Старое «не работает» на новой модели может заработать.</small></div>
+<p><span class="tag f">проверено</span> workflow из нескольких агентов, свои агенты, <code>/loop</code>, <code>/schedule</code> — работают у тебя.</p>
+<p><span class="tag u">со слов Бориса</span> 11 дней переписывания Bun, тысячи агентов, <code>CLAUDE_CODE_SIMPLE</code> — не проверялось.</p>
+</div></details>
+
+<details><summary><span class="n">2</span><span class="t">Бриф — главный навык</span></summary><div class="body">
+<div class="card bad"><b>Плохо</b><small>«Открой файл, добавь функцию, сначала А, потом Б…» — агент делает ровно это и останавливается, даже если не работает.</small></div>
+<div class="card good"><b>Хорошо</b><small>«Перепиши на Swift. Запускай старое в VM, сравнивай скриншоты попиксельно. Не останавливайся, пока не совпадёт.»</small></div>
+<p>Шаблон (нажми, чтобы выделить и скопировать):</p>
+<pre># Бриф
+## Цель
+зачем, одна-две фразы
+## Ограничения
+- что нельзя трогать, стек
+## Готово, когда
+- наблюдаемый результат
+## Как проверить
+команда или инструмент: тесты, скриншот, curl
+## Не останавливайся, пока
+проверка не зелёная</pre>
+<p>Самое важное поле — «Как проверить». Без него бриф не работает.</p>
+</div></details>
+
+<details><summary><span class="n">3</span><span class="t">Что лежит в agent-lab</span></summary><div class="body">
+<ul>
+<li><code>CLAUDE.md</code> — почти пустой. Строка только после двух одинаковых ошибок.</li>
+<li><code>AGENTS.md</code> — то же для Codex.</li>
+<li><code>tasks/TEMPLATE.md</code> — шаблон брифа.</li>
+<li><code>verifier</code> — проверяющий: запускает проверку, пытается сломать, код не правит.</li>
+<li><code>dead-code-hunter</code> — удаляет мёртвый код в ветке.</li>
+<li><code>test-gardener</code> — дописывает нужные тесты, убирает пустые.</li>
+<li><code>abstraction-police</code> — объединяет одинаковые реализации.</li>
+<li><code>build-verify.js</code> — workflow «сделай → проверь → исправь».</li>
+<li><code>evals/</code> — журнал ошибок агентов и оценочные задачи.</li>
+</ul>
+<div class="flow">
+<div><b>Бриф</b> · цель + проверка</div><div class="a">↓</div>
+<div><b>Исполнитель</b> · делает и сам гоняет проверку</div><div class="a">↓</div>
+<div><b>2 проверяющих</b> · ① буквально по брифу ② пытается сломать</div><div class="a">↓</div>
+<div><b>Все PASS?</b> · да → готово, нет → исправление и снова</div>
+</div>
+</div></details>
+
+<details><summary><span class="n">4</span><span class="t">Как запустить</span></summary><div class="body">
+<p>На Mac в Терминале:</p>
+<pre>cd ~/Projects/agent-lab && claude</pre>
+<p>И в сессии написать:</p>
+<pre>Используй workflow build-verify, brief = tasks/мой-бриф.md</pre>
+<p>Или без готового workflow:</p>
+<pre>Используй workflow. Задача в tasks/мой-бриф.md. Проверяй независимыми агентами, не останавливайся, пока проверка не зелёная.</pre>
+<p>С телефона: просто напиши мне в Claude «прогони бриф X через build-verify» — я запущу на Mac.</p>
+</div></details>
+
+<details><summary><span class="n">5</span><span class="t">Рутины: одна фраза каждый день</span></summary><div class="body">
+<p>Workflow — одна большая задача. Рутина — одна и та же задача снова и снова.</p>
+<pre>/loop 1d Используй агента dead-code-hunter</pre>
+<p><code>/loop</code> работает, пока открыт Mac. <code>/schedule</code> — в облаке, Mac можно закрыть.</p>
+<ol><li>Одна рутина на один реальный репозиторий.</li><li>Неделю читай её PR, не мержи вслепую.</li><li>Повторилась ошибка — одна строка в агента.</li><li>Стабильно — добавляй вторую.</li></ol>
+</div></details>
+
+<details><summary><span class="n">6</span><span class="t">Абляция: удалять лишнее</span></summary><div class="body">
+<p>Каждую инструкцию модель читает при каждом запуске. Лишние строки стоят денег и иногда мешают.</p>
+<ol><li><b>Удалить</b> — копия CLAUDE.md, оставить пустой.</li><li><b>Пользоваться</b> — прогнать оценочные задачи.</li><li><b>Записать</b> спотыкания в <code>evals/stumbles.md</code>.</li><li><b>Вернуть</b> строку, только если ошибка повторилась.</li></ol>
+<p>Самая ценная оценочная задача — та, которую модель <b>сейчас не решает</b>.</p>
+</div></details>
+
+<details><summary><span class="n">7</span><span class="t">Урок первого прогона</span></summary><div class="body">
+<p>Демо-задача: модуль статистики текста. Все тесты зелёные, «строгий» проверяющий — PASS. «Злой» нашёл: слово с ударением «Ма́ма» считается как два слова.</p>
+<p><b>Вывод:</b> зелёные тесты ≠ работает. Нашёл дыру — не чини руками, а добавь тест и прогони снова. Так система становится умнее с каждой ошибкой.</p>
+</div></details>
+
+<details><summary><span class="n">8</span><span class="t">Практика</span></summary><div class="body">
+<label class="chk"><input type="checkbox"><span>Собрать бриф для реальной задачи из dub-studio или Neyrotex</span></label>
+<label class="chk"><input type="checkbox"><span>Прогнать его через build-verify</span></label>
+<label class="chk"><input type="checkbox"><span>Записать первое спотыкание в evals/stumbles.md</span></label>
+<label class="chk"><input type="checkbox"><span>Попробовать Codex исполнителем, verifier — проверяющим</span></label>
+<label class="chk"><input type="checkbox"><span>Включить одну рутину /loop на реальном репозитории</span></label>
+<label class="chk"><input type="checkbox"><span>Добавить задачу, которую модель сейчас не решает</span></label>
+<label class="chk"><input type="checkbox"><span>День работы с пустым CLAUDE.md и сравнить</span></label>
+</div></details>
+
+<p class="foot">Офлайн-файл: работает без интернета. Сохрани в Файлы или на экран «Домой».</p>
+</div></body>
+</html>
