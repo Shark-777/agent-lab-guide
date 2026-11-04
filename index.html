@@ -4,141 +4,306 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Агенты">
-<meta name="theme-color" content="#0e7c86">
-<title>Агентная лаборатория</title>
-<!-- Офлайн-версия для iPhone: один файл, без сети и без JavaScript.
-     Открывается в Файлах (быстрый просмотр) и в Safari. Уроки — нативные <details>. -->
-<style>
-:root{--bg:#f3f6f7;--surface:#fff;--fg:#14232b;--muted:#56707c;--line:#d5e0e4;--accent:#0e7c86;--soft:#dff0f1;--warn:#a6561b;--ok:#2f7d3c;--code:#0f1d24;--codefg:#d8ecef;color-scheme:light dark}
-@media (prefers-color-scheme:dark){:root{--bg:#0c161b;--surface:#13222a;--fg:#e3eef1;--muted:#8fa9b3;--line:#24363f;--accent:#4cc3cc;--soft:#16343a;--warn:#e3a06a;--ok:#7cc98a;--code:#08110f;--codefg:#cfe7ea}}
-*{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--fg)}
-body{font:17px/1.5 -apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif;-webkit-text-size-adjust:100%;
- padding:max(20px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(32px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
-.wrap{max-width:640px;margin:0 auto}
-.eyebrow{font:600 12px ui-monospace,Menlo,monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
-h1{font:800 30px/1.1 -apple-system,system-ui,sans-serif;margin:8px 0 8px;letter-spacing:-.02em}
-.lead{color:var(--muted);margin:0 0 18px}
-details{background:var(--surface);border:1px solid var(--line);border-radius:14px;margin:10px 0;overflow:hidden}
-summary{list-style:none;cursor:pointer;padding:15px 16px;font-weight:650;display:flex;gap:12px;align-items:center;min-height:44px}
-summary::-webkit-details-marker{display:none}
-summary .n{flex:0 0 28px;height:28px;border-radius:50%;background:var(--soft);color:var(--accent);display:grid;place-items:center;font-size:14px;font-weight:700}
-summary .t{flex:1}
-summary::after{content:"›";color:var(--muted);font-size:22px;transition:transform .2s}
-details[open] summary::after{transform:rotate(90deg)}
-details[open] summary{border-bottom:1px solid var(--line)}
-.body{padding:4px 16px 16px}
-.body p,.body li{margin:10px 0}
-ul,ol{padding-left:22px}
-code{font:14px ui-monospace,Menlo,monospace;background:var(--soft);padding:1px 5px;border-radius:5px;word-break:break-word}
-pre{background:var(--code);color:var(--codefg);font:13.5px/1.5 ui-monospace,Menlo,monospace;padding:12px 14px;border-radius:10px;white-space:pre-wrap;word-break:break-word;margin:10px 0;-webkit-user-select:all;user-select:all}
-.card{border-left:3px solid var(--line);padding:2px 0 2px 12px;margin:12px 0}
-.card.bad{border-color:var(--warn)}.card.good{border-color:var(--ok)}
-.card b{display:block}
-.tag{display:inline-block;font:700 11px ui-monospace,monospace;text-transform:uppercase;letter-spacing:.05em;padding:3px 6px;border-radius:5px;margin-right:4px}
-.tag.f{background:var(--soft);color:var(--accent)}.tag.u{border:1px solid var(--warn);color:var(--warn)}
-.flow{display:grid;gap:6px;margin:12px 0}
-.flow div{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 12px}
-.flow .a{border:0;background:none;padding:0;text-align:center;color:var(--accent);font-weight:700}
-label.chk{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line)}
-label.chk input{width:22px;height:22px;margin-top:1px;accent-color:var(--accent);flex:0 0 auto}
-small,.muted{color:var(--muted)}
-.foot{margin-top:22px;font-size:14px;color:var(--muted)}
-</style>
+<meta name="theme-color" content="#0c161b">
+<style>:root{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0}[hidden]{display:none!important}*{box-sizing:border-box}</style>
 </head>
-<body><div class="wrap">
+<body>
+<title>Агентная лаборатория</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: узкая колонка чтения + липкая лента вкладок-уроков; каждый урок = тезис, практика, команда */
+:root{
+  --bg:#f3f6f7; --surface:#ffffff; --fg:#14232b; --muted:#56707c; --line:#d5e0e4;
+  --accent:#0e7c86; --accent-soft:#dff0f1; --warn:#a6561b; --ok:#2f7d3c;
+  --code-bg:#0f1d24; --code-fg:#d8ecef;
+  --display:"Unbounded","Golos Text",system-ui,sans-serif;
+  --body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0c161b; --surface:#13222a; --fg:#e3eef1; --muted:#8fa9b3; --line:#24363f;
+  --accent:#4cc3cc; --accent-soft:#16343a; --warn:#e3a06a; --ok:#7cc98a;
+  --code-bg:#08110f; --code-fg:#cfe7ea; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0c161b; --surface:#13222a; --fg:#e3eef1; --muted:#8fa9b3; --line:#24363f;
+  --accent:#4cc3cc; --accent-soft:#16343a; --warn:#e3a06a; --ok:#7cc98a;
+  --code-bg:#08110f; --code-fg:#cfe7ea; color-scheme:dark}
+html,body{background:var(--bg);color:var(--fg)}
+body{font:16px/1.6 var(--body)}
+.wrap{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.top .eyebrow{margin:0}
+.theme{flex:0 0 auto;font:500 13px var(--body);color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 12px;min-height:36px;cursor:pointer}
+header h1{font:700 clamp(26px,5vw,40px)/1.15 var(--display);margin:0 0 10px;text-wrap:balance;letter-spacing:-.01em}
+header p{color:var(--muted);margin:0;max-width:62ch}
+.eyebrow{font:600 12px/1 var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--accent);margin-bottom:12px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);margin:24px 0 8px;padding-block:10px;border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+nav button{flex:0 0 auto;font:500 14px var(--body);color:var(--muted);background:none;border:1px solid transparent;border-radius:999px;padding:7px 14px;cursor:pointer}
+nav button[aria-selected="true"]{color:var(--fg);background:var(--accent-soft);border-color:var(--accent)}
+nav button:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+section{padding-top:18px}
+h2{font:700 22px/1.25 var(--display);margin:8px 0 12px;text-wrap:balance}
+h3{font:600 17px/1.3 var(--body);margin:22px 0 8px}
+p,li{max-width:66ch}
+.muted{color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:14px 0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}
+.card b{display:block;margin-bottom:4px}
+.card small{color:var(--muted);font-size:14px}
+.tag{display:inline-block;font:600 11px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:4px 7px;border-radius:5px;margin-right:6px}
+.tag.fact{background:var(--accent-soft);color:var(--accent)}
+.tag.unv{background:transparent;border:1px solid var(--warn);color:var(--warn)}
+pre{background:var(--code-bg);color:var(--code-fg);font:13.5px/1.55 var(--mono);padding:14px 16px;border-radius:10px;overflow-x:auto;margin:10px 0}
+code{font-family:var(--mono);font-size:.92em}
+p code,li code{background:var(--accent-soft);padding:1px 5px;border-radius:4px}
+.cmd{position:relative}
+.cmd button{position:absolute;top:8px;right:8px;font:500 12px var(--body);background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:4px 9px;cursor:pointer}
+.bad-good{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.bad-good .card:first-child{border-left:3px solid var(--warn)}
+.bad-good .card:last-child{border-left:3px solid var(--ok)}
+@media (max-width:620px){.bad-good{grid-template-columns:1fr}}
+form.brief{display:grid;gap:12px}
+label{font-weight:600;font-size:14px;display:grid;gap:5px}
+label span{font-weight:400;color:var(--muted)}
+textarea,input[type=text]{font:15px/1.45 var(--body);color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:9px 11px;width:100%;box-sizing:border-box;resize:vertical}
+.meter{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin:6px 0 2px}
+.meter i{display:block;height:100%;background:var(--accent);width:0;transition:width .2s}
+.check{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
+.check input{margin-top:5px;width:18px;height:18px;accent-color:var(--accent);flex:0 0 auto}
+.check div{min-width:0}
+.flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:8px;margin:12px 0}
+.node{flex:1 1 150px;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.node b{display:block}.node small{color:var(--muted);font-size:13.5px;line-height:1.4}
+.node.pair{border-color:var(--accent)}.node.ok{border-left:3px solid var(--ok)}
+.arr{align-self:center;color:var(--accent);font-weight:700}
+@media (max-width:620px){.arr{transform:rotate(90deg);width:100%;text-align:center}}
+td:first-child code{font-size:12.5px;word-break:break-all}
+td:first-child{width:42%}
+table{border-collapse:collapse;width:100%;font-size:15px}
+td,th{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 12px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.tw{overflow-x:auto}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
 
-<div class="eyebrow">agent-lab · метод Бориса Черного</div>
-<h1>Агентная лаборатория</h1>
-<p class="lead">Как ставить агентам задачи, чтобы они работали долго и сами проверяли себя. Нажми на урок, чтобы раскрыть.</p>
+<div class="wrap">
+<header>
+  <div class="top"><div class="eyebrow">agent-lab · по выступлению Бориса Черного</div>
+  <button type="button" id="themeBtn" class="theme" aria-label="Переключить тему"></button></div>
+  <h1>Агентная лаборатория</h1>
+  <p>Как ставить агентам задачи, чтобы они работали долго и сами проверяли себя. Семь коротких уроков, каждый заканчивается действием в твоём проекте <code>~/Projects/agent-lab</code>.</p>
+</header>
 
-<details open><summary><span class="n">1</span><span class="t">Главная мысль</span></summary><div class="body">
-<p>Модель уже умеет больше, чем мы ей позволяем. Хитрых приёмов нет. Дай задачу чуть сложнее посильной, дай способ <b>самой проверить результат</b>, посмотри, где она спотыкается, и только там добавь подсказку.</p>
-<div class="card"><b>Снять ограничения</b><small>Лишняя обвязка мешает. Сначала убрать, потом возвращать по строке.</small></div>
-<div class="card"><b>Цель, а не шаги</b><small>Задача + ограничения + критерий готовности.</small></div>
-<div class="card"><b>Проверка решает всё</b><small>Без неё агент не знает, когда остановиться.</small></div>
-<div class="card"><b>Эмпирика</b><small>Пробуй, смотри, исправляй. Старое «не работает» на новой модели может заработать.</small></div>
-<p><span class="tag f">проверено</span> workflow из нескольких агентов, свои агенты, <code>/loop</code>, <code>/schedule</code> — работают у тебя.</p>
-<p><span class="tag u">со слов Бориса</span> 11 дней переписывания Bun, тысячи агентов, <code>CLAUDE_CODE_SIMPLE</code> — не проверялось.</p>
-</div></details>
+<nav role="tablist" aria-label="Уроки">
+  <button role="tab" data-t="idea">1. Идея</button>
+  <button role="tab" data-t="brief">2. Бриф</button>
+  <button role="tab" data-t="system">3. Система</button>
+  <button role="tab" data-t="run">4. Запуск</button>
+  <button role="tab" data-t="routines">5. Рутины</button>
+  <button role="tab" data-t="evals">6. Абляция</button>
+  <button role="tab" data-t="practice">7. Практика</button>
+</nav>
 
-<details><summary><span class="n">2</span><span class="t">Бриф — главный навык</span></summary><div class="body">
-<div class="card bad"><b>Плохо</b><small>«Открой файл, добавь функцию, сначала А, потом Б…» — агент делает ровно это и останавливается, даже если не работает.</small></div>
-<div class="card good"><b>Хорошо</b><small>«Перепиши на Swift. Запускай старое в VM, сравнивай скриншоты попиксельно. Не останавливайся, пока не совпадёт.»</small></div>
-<p>Шаблон (нажми, чтобы выделить и скопировать):</p>
-<pre># Бриф
-## Цель
-зачем, одна-две фразы
-## Ограничения
-- что нельзя трогать, стек
-## Готово, когда
-- наблюдаемый результат
-## Как проверить
-команда или инструмент: тесты, скриншот, curl
-## Не останавливайся, пока
-проверка не зелёная</pre>
-<p>Самое важное поле — «Как проверить». Без него бриф не работает.</p>
-</div></details>
+<section id="idea" role="tabpanel">
+  <h2>Мысль выступления в одном абзаце</h2>
+  <p>Модель уже умеет больше, чем мы ей позволяем. Хитрых приёмов нет. Работает одно: дать задачу чуть сложнее, чем кажется посильной, дать способ <b>самой проверять результат</b>, посмотреть, где она спотыкается, и только там добавить подсказку, навык или инструмент.</p>
+  <div class="grid">
+    <div class="card"><b>Снять ограничения</b><small>Мешающая обвязка хуже её отсутствия. Сначала убрать, потом возвращать по одной строке.</small></div>
+    <div class="card"><b>Цель, а не шаги</b><small>Задача + ограничения + критерий готовности. Пошаговые инструкции мешают сильной модели.</small></div>
+    <div class="card"><b>Проверка решает всё</b><small>Без способа проверить агент не знает, когда остановиться. С ним работает днями.</small></div>
+    <div class="card"><b>Эмпирика</b><small>Пробуй, смотри, исправляй. Что не работало на старой модели, может работать на новой.</small></div>
+  </div>
+  <h3>Что из этого факт, а что заявление</h3>
+  <p><span class="tag fact">проверено здесь</span> Workflow с несколькими агентами, кастомные агенты в <code>.claude/agents</code>, <code>/loop</code> и <code>/schedule</code> есть в твоём Claude Code — пробный прогон в уроке 4.</p>
+  <p><span class="tag unv">со слов Бориса</span> 11 дней переписывания Bun, две недели работы над Swift-приложением, тысячи агентов, неуязвимость к промпт-инъекциям, переменная <code>CLAUDE_CODE_SIMPLE</code>. Это заявления из интервью, на твоей машине не проверялись.</p>
+</section>
 
-<details><summary><span class="n">3</span><span class="t">Что лежит в agent-lab</span></summary><div class="body">
-<ul>
-<li><code>CLAUDE.md</code> — почти пустой. Строка только после двух одинаковых ошибок.</li>
-<li><code>AGENTS.md</code> — то же для Codex.</li>
-<li><code>tasks/TEMPLATE.md</code> — шаблон брифа.</li>
-<li><code>verifier</code> — проверяющий: запускает проверку, пытается сломать, код не правит.</li>
-<li><code>dead-code-hunter</code> — удаляет мёртвый код в ветке.</li>
-<li><code>test-gardener</code> — дописывает нужные тесты, убирает пустые.</li>
-<li><code>abstraction-police</code> — объединяет одинаковые реализации.</li>
-<li><code>build-verify.js</code> — workflow «сделай → проверь → исправь».</li>
-<li><code>evals/</code> — журнал ошибок агентов и оценочные задачи.</li>
-</ul>
-<div class="flow">
-<div><b>Бриф</b> · цель + проверка</div><div class="a">↓</div>
-<div><b>Исполнитель</b> · делает и сам гоняет проверку</div><div class="a">↓</div>
-<div><b>2 проверяющих</b> · ① буквально по брифу ② пытается сломать</div><div class="a">↓</div>
-<div><b>Все PASS?</b> · да → готово, нет → исправление и снова</div>
+<section id="brief" role="tabpanel" hidden>
+  <h2>Бриф: главный навык</h2>
+  <p>Ты пишешь не инструкцию, а договор: что должно получиться и как это проверить. Сравни:</p>
+  <div class="bad-good">
+    <div class="card"><b>Слишком подробно</b><small>«Открой файл X, добавь функцию Y, сначала сделай A, потом B, потом C, используй цикл for…» — агент делает ровно это и останавливается, даже если результат не работает.</small></div>
+    <div class="card"><b>Как у Бориса</b><small>«Перепиши приложение на Swift. Запускай старое в VM, делай скриншоты и сравнивай попиксельно. Не останавливайся, пока не совпадёт.» Цель + проверка + условие остановки.</small></div>
+  </div>
+  <h3>Собери свой бриф</h3>
+  <form class="brief" id="briefForm">
+    <label for="b-goal">Цель <span>зачем, одна-две фразы</span><textarea id="b-goal" rows="2">Сделать экран входа в приложение по email-коду</textarea></label>
+    <label for="b-limits">Ограничения <span>что нельзя трогать, стек</span><textarea id="b-limits" rows="2">Flutter, не менять существующую навигацию, без новых пакетов</textarea></label>
+    <label for="b-done">Готово, когда <span>наблюдаемый результат</span><textarea id="b-done" rows="2">Код приходит на тестовый email, вход открывает главный экран</textarea></label>
+    <label for="b-verify">Как проверить <span>самое важное поле</span><textarea id="b-verify" rows="2">flutter test; запуск в iOS Simulator, скриншот экрана входа и главного экрана</textarea></label>
+  </form>
+  <div class="meter" aria-hidden="true"><i id="briefMeter"></i></div>
+  <small class="muted" id="briefHint"></small>
+  <div class="cmd"><button type="button" data-copy="briefOut">Копировать</button><pre id="briefOut"></pre></div>
+  <p class="muted">Сохрани текст в <code>tasks/&lt;имя&gt;.md</code> и запусти по уроку 4.</p>
+</section>
+
+<section id="system" role="tabpanel" hidden>
+  <h2>Что лежит в agent-lab</h2>
+  <div class="tw"><table>
+    <tr><th>Файл</th><th>Роль</th></tr>
+    <tr><td><code>CLAUDE.md</code></td><td>Почти пустой. Строка добавляется, только если агент споткнулся в одном месте дважды.</td></tr>
+    <tr><td><code>AGENTS.md</code></td><td>То же для Codex и других агентов.</td></tr>
+    <tr><td><code>tasks/TEMPLATE.md</code></td><td>Шаблон брифа: цель, ограничения, готово, проверка.</td></tr>
+    <tr><td><code>.claude/agents/verifier.md</code></td><td>Независимый проверяющий: запускает проверку и пытается сломать, код не правит.</td></tr>
+    <tr><td><code>.claude/agents/dead-code-hunter.md</code></td><td>Рутина: ищет и удаляет мёртвый код в отдельной ветке.</td></tr>
+    <tr><td><code>.claude/agents/test-gardener.md</code></td><td>Рутина: дописывает нужные тесты, удаляет бесполезные.</td></tr>
+    <tr><td><code>.claude/agents/abstraction-police.md</code></td><td>Рутина: объединяет почти одинаковые реализации.</td></tr>
+    <tr><td><code>.claude/workflows/build-verify.js</code></td><td>Динамический workflow: исполнитель → 2 проверяющих → исправление, до зелёной проверки.</td></tr>
+    <tr><td><code>evals/</code></td><td>Журнал спотыканий, постоянные оценочные задачи, процедура абляции.</td></tr>
+    <tr><td><code>routines/README.md</code></td><td>Готовые однострочные рутины для /loop, /schedule и Codex.</td></tr>
+  </table></div>
+  <h3>Как работает build-verify</h3>
+  <div class="flow" role="list">
+    <div class="node" role="listitem"><b>Бриф</b><small>цель + проверка</small></div>
+    <div class="arr" aria-hidden="true">→</div>
+    <div class="node" role="listitem"><b>Исполнитель</b><small>делает и сам гоняет проверку</small></div>
+    <div class="arr" aria-hidden="true">→</div>
+    <div class="node pair" role="listitem"><b>2 проверяющих</b><small>① буквально по брифу<br>② пытается сломать</small></div>
+    <div class="arr" aria-hidden="true">→</div>
+    <div class="node ok" role="listitem"><b>Все PASS?</b><small>да → готово<br>нет → исправление и снова проверка (до maxRounds)</small></div>
+  </div>
+  <p class="muted">Два проверяющих смотрят с разных сторон: одинаковые проверяющие пропускают одно и то же.</p>
+</section>
+
+<section id="run" role="tabpanel" hidden>
+  <h2>Пробный запуск</h2>
+  <p>Демо-задача уже лежит в проекте: <code>tasks/demo-textstats.md</code> — модуль статистики текста с готовыми тестами, которые сейчас красные. Агенты должны сделать их зелёными и пройти независимую проверку.</p>
+  <h3>Вариант А: словами (так советует Борис)</h3>
+  <div class="cmd"><button type="button" data-copy="c1">Копировать</button><pre id="c1">cd ~/Projects/agent-lab && claude
+# в сессии:
+Используй workflow build-verify, brief = tasks/demo-textstats.md</pre></div>
+  <h3>Вариант Б: свой бриф без готового workflow</h3>
+  <div class="cmd"><button type="button" data-copy="c2">Копировать</button><pre id="c2">Используй workflow. Задача в tasks/мой-бриф.md.
+Делай, проверяй независимыми агентами, не останавливайся, пока проверка не зелёная.</pre></div>
+  <h3>Вариант В: Codex как исполнитель</h3>
+  <div class="cmd"><button type="button" data-copy="c3">Копировать</button><pre id="c3">codex exec -s workspace-write "Выполни бриф tasks/demo-textstats.md, не останавливайся, пока проверка не зелёная" &lt; /dev/null
+# затем в Claude: «Используй агента verifier для tasks/demo-textstats.md»</pre></div>
+  <p>Прогресс workflow смотри командой <code>/workflows</code>. Результат первого пробного прогона записан в <code>evals/first-run.md</code>.</p>
+</section>
+
+<section id="routines" role="tabpanel" hidden>
+  <h2>Рутины: одна фраза каждый день</h2>
+  <p>Workflow — одна большая задача, разбитая на части. Рутина — одна и та же задача снова и снова. Между запусками контекст не сохраняется, поэтому промт должен быть самодостаточным.</p>
+  <div class="grid">
+    <div class="card"><b>/loop</b><small>Локальный повтор, пока открыт ноутбук. <code>/loop 1d Используй агента dead-code-hunter</code></small></div>
+    <div class="card"><b>/schedule</b><small>Облачный повтор, ноутбук можно закрыть. Хорошо для PR-рутин.</small></div>
+  </div>
+  <h3>С чего начать</h3>
+  <ol>
+    <li>Одна рутина на один реальный репозиторий, например dub-studio-mobile.</li>
+    <li>Неделю читай её PR. Не мержи вслепую.</li>
+    <li>Видишь повторяющуюся ошибку рутины — допиши одну строку в её агента.</li>
+    <li>Работает стабильно — добавляй вторую.</li>
+  </ol>
+</section>
+
+<section id="evals" role="tabpanel" hidden>
+  <h2>Абляция и оценочные задачи</h2>
+  <p>Каждая инструкция читается моделью при каждом запуске. Лишние строки стоят денег и иногда делают модель глупее. Поэтому при новой модели: убрать всё, прогнать оценочные задачи, вернуть только то, без чего стало хуже.</p>
+  <h3>Цикл</h3>
+  <ol>
+    <li><b>Удалить</b> — сохранить копию CLAUDE.md, оставить пустой.</li>
+    <li><b>Пользоваться</b> — прогнать задачи из <code>evals/cases.md</code>.</li>
+    <li><b>Записать спотыкания</b> — в <code>evals/stumbles.md</code>.</li>
+    <li><b>Вернуть</b> — строку, только если ошибка повторилась.</li>
+  </ol>
+  <p>Самая ценная оценочная задача — та, которую модель <b>сейчас не решает</b>. Пробуй её на каждой новой модели. Задачу, которую модель решает всегда, выбрасывай: тест упёрся в потолок.</p>
+  <p class="muted">Для тебя это особенно актуально: в глобальных правилах уже сотни строк. Хороший эксперимент — один день поработать в agent-lab без них и сравнить.</p>
+</section>
+
+<section id="practice" role="tabpanel" hidden>
+  <h2>Практика: от первого запуска к своей системе</h2>
+  <div class="meter" aria-hidden="true"><i id="progMeter"></i></div>
+  <small class="muted" id="progText"></small>
+  <div id="checks"></div>
+</section>
 </div>
-</div></details>
 
-<details><summary><span class="n">4</span><span class="t">Как запустить</span></summary><div class="body">
-<p>На Mac в Терминале:</p>
-<pre>cd ~/Projects/agent-lab && claude</pre>
-<p>И в сессии написать:</p>
-<pre>Используй workflow build-verify, brief = tasks/мой-бриф.md</pre>
-<p>Или без готового workflow:</p>
-<pre>Используй workflow. Задача в tasks/мой-бриф.md. Проверяй независимыми агентами, не останавливайся, пока проверка не зелёная.</pre>
-<p>С телефона: просто напиши мне в Claude «прогони бриф X через build-verify» — я запущу на Mac.</p>
-</div></details>
+<script>
+// Тема: по умолчанию тёмная, выбор запоминается на устройстве.
+const root=document.documentElement, themeBtn=document.getElementById('themeBtn');
+function setTheme(t){root.dataset.theme=t;themeBtn.textContent=t==='dark'?'☀ Светлая':'☾ Тёмная';
+  document.querySelector('meta[name=theme-color]')?.setAttribute('content',t==='dark'?'#0c161b':'#f3f6f7')}
+let savedTheme;try{savedTheme=localStorage.getItem('theme')}catch(e){}
+setTheme(savedTheme||'dark');
+themeBtn.addEventListener('click',()=>{const t=root.dataset.theme==='dark'?'light':'dark';setTheme(t);try{localStorage.setItem('theme',t)}catch(e){}});
+const tabs=[...document.querySelectorAll('nav button')];
+function show(id){
+  if(!document.getElementById(id)) id='idea';
+  tabs.forEach(b=>b.setAttribute('aria-selected',b.dataset.t===id));
+  document.querySelectorAll('section').forEach(s=>s.hidden=s.id!==id);
+  try{localStorage.setItem('tab',id)}catch(e){}
+}
+tabs.forEach(b=>b.addEventListener('click',()=>{show(b.dataset.t);window.scrollTo({top:0})}));
+let start=location.hash.slice(1);
+if(!start){try{start=localStorage.getItem('tab')}catch(e){}}
+show(start||'idea');
 
-<details><summary><span class="n">5</span><span class="t">Рутины: одна фраза каждый день</span></summary><div class="body">
-<p>Workflow — одна большая задача. Рутина — одна и та же задача снова и снова.</p>
-<pre>/loop 1d Используй агента dead-code-hunter</pre>
-<p><code>/loop</code> работает, пока открыт Mac. <code>/schedule</code> — в облаке, Mac можно закрыть.</p>
-<ol><li>Одна рутина на один реальный репозиторий.</li><li>Неделю читай её PR, не мержи вслепую.</li><li>Повторилась ошибка — одна строка в агента.</li><li>Стабильно — добавляй вторую.</li></ol>
-</div></details>
+const F=['goal','limits','done','verify'].map(k=>document.getElementById('b-'+k));
+function renderBrief(){
+  const [g,l,d,v]=F.map(f=>f.value.trim());
+  document.getElementById('briefOut').textContent=
+`# Бриф
 
-<details><summary><span class="n">6</span><span class="t">Абляция: удалять лишнее</span></summary><div class="body">
-<p>Каждую инструкцию модель читает при каждом запуске. Лишние строки стоят денег и иногда мешают.</p>
-<ol><li><b>Удалить</b> — копия CLAUDE.md, оставить пустой.</li><li><b>Пользоваться</b> — прогнать оценочные задачи.</li><li><b>Записать</b> спотыкания в <code>evals/stumbles.md</code>.</li><li><b>Вернуть</b> строку, только если ошибка повторилась.</li></ol>
-<p>Самая ценная оценочная задача — та, которую модель <b>сейчас не решает</b>.</p>
-</div></details>
+## Цель
+${g||'—'}
 
-<details><summary><span class="n">7</span><span class="t">Урок первого прогона</span></summary><div class="body">
-<p>Демо-задача: модуль статистики текста. Все тесты зелёные, «строгий» проверяющий — PASS. «Злой» нашёл: слово с ударением «Ма́ма» считается как два слова.</p>
-<p><b>Вывод:</b> зелёные тесты ≠ работает. Нашёл дыру — не чини руками, а добавь тест и прогони снова. Так система становится умнее с каждой ошибкой.</p>
-</div></details>
+## Ограничения
+${l?l.split(/[,;\n]/).map(s=>'- '+s.trim()).filter(s=>s.length>2).join('\n'):'—'}
 
-<details><summary><span class="n">8</span><span class="t">Практика</span></summary><div class="body">
-<label class="chk"><input type="checkbox"><span>Собрать бриф для реальной задачи из dub-studio или Neyrotex</span></label>
-<label class="chk"><input type="checkbox"><span>Прогнать его через build-verify</span></label>
-<label class="chk"><input type="checkbox"><span>Записать первое спотыкание в evals/stumbles.md</span></label>
-<label class="chk"><input type="checkbox"><span>Попробовать Codex исполнителем, verifier — проверяющим</span></label>
-<label class="chk"><input type="checkbox"><span>Включить одну рутину /loop на реальном репозитории</span></label>
-<label class="chk"><input type="checkbox"><span>Добавить задачу, которую модель сейчас не решает</span></label>
-<label class="chk"><input type="checkbox"><span>День работы с пустым CLAUDE.md и сравнить</span></label>
-</div></details>
+## Готово, когда
+${d||'—'}
 
-<p class="foot">Офлайн-файл: работает без интернета. Сохрани в Файлы или на экран «Домой».</p>
-</div></body>
+## Как проверить
+${v||'— (без этого агент не знает, когда остановиться)'}
+
+## Не останавливайся, пока
+проверка не зелёная. Застрял — запиши почему в evals/stumbles.md.`;
+  const score=(g?25:0)+(l?15:0)+(d?25:0)+(v?35:0);
+  document.getElementById('briefMeter').style.width=score+'%';
+  document.getElementById('briefHint').textContent=
+    !v?'Не хватает главного: как агент проверит результат.':
+    v.length<20?'Проверка слишком короткая: назови конкретную команду или инструмент.':
+    'Бриф готов: есть цель, рамки и способ самопроверки.';
+}
+F.forEach(f=>f.addEventListener('input',renderBrief));renderBrief();
+
+document.querySelectorAll('[data-copy]').forEach(b=>b.addEventListener('click',()=>{
+  const el=document.getElementById(b.dataset.copy);
+  navigator.clipboard.writeText(el.textContent).then(()=>{b.textContent='Скопировано';setTimeout(()=>b.textContent='Копировать',1500)})
+  .catch(()=>{const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='Выделено'});
+}));
+
+const STEPS=[
+ ['Прочитать урок 2 и собрать бриф для реальной задачи','Не демо: что-то из dub-studio или Neyrotex.'],
+ ['Запустить демо: workflow build-verify на tasks/demo-textstats.md','Посмотреть в /workflows, как работают исполнитель и проверяющие.'],
+ ['Запустить свой бриф через «Используй workflow»','Дать задачу чуть сложнее, чем кажется посильной.'],
+ ['Записать первое спотыкание в evals/stumbles.md','Где агент ошибся и почему.'],
+ ['Попробовать Codex исполнителем, а verifier — проверяющим','Два разных провайдера ошибаются по-разному.'],
+ ['Включить одну рутину /loop на реальном репозитории','Неделю читать её результаты.'],
+ ['Добавить в evals/cases.md задачу, которую модель сейчас не решает','Пробовать её на каждой новой модели.'],
+ ['Сделать абляцию: день работы с пустым CLAUDE.md в agent-lab','Сравнить качество и скорость.'],
+];
+let done={};try{done=JSON.parse(localStorage.getItem('steps')||'{}')}catch(e){}
+const box=document.getElementById('checks');
+STEPS.forEach(([t,s],i)=>{
+  const row=document.createElement('label');row.className='check';row.htmlFor='s'+i;
+  row.innerHTML=`<input type="checkbox" id="s${i}"><div><b>${t}</b><br><small class="muted">${s}</small></div>`;
+  const cb=row.querySelector('input');cb.checked=!!done[i];
+  cb.addEventListener('change',()=>{done[i]=cb.checked;try{localStorage.setItem('steps',JSON.stringify(done))}catch(e){};prog()});
+  box.appendChild(row);
+});
+function prog(){const n=STEPS.filter((_,i)=>done[i]).length;
+  document.getElementById('progMeter').style.width=(n/STEPS.length*100)+'%';
+  document.getElementById('progText').textContent=`Выполнено ${n} из ${STEPS.length}`}
+prog();
+</script>
+
+</body>
 </html>
